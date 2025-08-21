@@ -27,7 +27,6 @@ ALLOWED_ASPECTS = {DEFAULT_ASPECT}
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_TEXT_MODEL = os.getenv("GEMINI_TEXT_MODEL", "gemini-1.5-pro")
 VEO_MODEL = os.getenv("VEO_MODEL", "veo-3.0-generate-preview")
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "outputs")
 
 # Consistency controls (env-tunable)
 PROMPT_TEMP_FAST = float(os.getenv("PROMPT_TEMP_FAST", "0.95"))
@@ -334,19 +333,14 @@ async def oneclick(
         raise HTTPException(status_code=400, detail=str(e))
 
     vid, op_name = _poll_op_until_done(client, op, poll_seconds=int(poll_seconds), timeout_s=360)
-     # === 저장 경로: ./outputs/파일명 ===
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    filename = os.path.basename(outfile or "veo_output.mp4")
-    out_path = os.path.join(OUTPUT_DIR, filename)
-
     client.files.download(file=vid.video)
-    vid.video.save(out_path)
+    vid.video.save(outfile)
 
-    return {"operation_name": op_name, "saved_path": out_path}
+    return {"operation_name": op_name, "saved_path": outfile}
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Optional local run
 # ──────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("generate_video.app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8001")), reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")), reload=True)
