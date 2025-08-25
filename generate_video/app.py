@@ -349,4 +349,4 @@ async def oneclick(
 # ──────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("generate_video.app:app", host="localhost", port=int(os.getenv("PORT", "9001")), reload=True)
+    uvicorn.run("generate_video.app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8001")), reload=True)

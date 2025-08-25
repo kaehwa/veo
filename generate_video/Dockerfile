@@ -18,4 +18,4 @@ RUN mkdir -p /generate_video/outputs
 VOLUME ["/generate_video/outputs"]
 
 # uvicorn 실행
-CMD ["uvicorn", "app:app", "--reload", "--host", "localhost", "--port", "9001"]
+CMD ["uvicorn", "app:app", "--reload", "--host", "0.0.0.0", "--port", "9001"]
